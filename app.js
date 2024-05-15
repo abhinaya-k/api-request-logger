@@ -1,6 +1,6 @@
 const { performance } = require("perf_hooks");
 const chalk = require("chalk");
-const { log } = require("./logger/log");
+const { logger } = require("./logger/log");
 
 const apiLogger = (req, res, next) => {
   const startTime = performance.now();
@@ -17,13 +17,9 @@ const apiLogger = (req, res, next) => {
       apiLatency: latency,
       time: new Date().toISOString(),
       reqBody: req.body,
-      env: process.env.NODE_ENV,
-      msg: "api_stats",
+      env: process.env.NODE_ENV
     };
-    console.log(
-      `[${chalk.bgWhiteBright(chalk.black("API STATS"))}]`,
-      chalk.blue.bold(JSON.stringify(logData))
-    );
+    logger.info("api_stats", logData)
   });
 
   next();
@@ -38,9 +34,9 @@ const processRequestId = (req) => {
   if (!req.headers["X-request-id"]) {
     const requestId = require("crypto").randomBytes(16).toString("hex");
     req.headers['X-request-id'] = requestId;
-    log.defaultMeta["requestId"] = requestId;
+    logger.defaultMeta["requestId"] = requestId;
     return requestId;
   } else if (req.headers["X-request-id"]) {
-    log.defaultMeta["requestId"] = req.headers["X-request-id"];
+    logger.defaultMeta["requestId"] = req.headers["X-request-id"];
   }
 }

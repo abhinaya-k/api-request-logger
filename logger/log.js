@@ -1,7 +1,7 @@
 const winston = require("winston");
 const { colorizeLevel } = require("./helpers/colorizeLevels");
 require("dotenv").config();
-const { combine, timestamp,json } = winston.format
+const { combine, timestamp, json, errors } = winston.format
 
 const logger = winston.createLogger({
   /** initialize requestId */
@@ -10,7 +10,8 @@ const logger = winston.createLogger({
   format: combine(
     colorizeLevel(),
     timestamp(),
-    json()
+    json(),
+    errors({ stack: true })
   ),
   transports: [new winston.transports.Console()],
 });

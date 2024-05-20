@@ -22,8 +22,7 @@
     "url": "https://github.com/rish15/api-request-logger/issues"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
-    "dotenv": "^16.3.1",
-    "winston": "^3.9.0"
+    "dotenv": "16.4.5",
+    "winston": "3.13.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "api-request-logger",
-  "version": "1.0.6",
+  "version": "1.2.0",
   "description": "Minimilistic middleware to log every api call to the server",
   "main": "index.js",
   "scripts": {},

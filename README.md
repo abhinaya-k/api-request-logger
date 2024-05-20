@@ -19,7 +19,7 @@ Adding to that it also provides a wrapper over winston library for logging, help
 
 ```javascript 
 const { apiLogger } = require("api-request-logger");`
-app.use(apiLogger)` add this line before the routes in the entry file
+app.use(apiLogger)` // add this line before the routes in the entry file
 ```
 
 
@@ -42,13 +42,13 @@ Logging format
 ### Logging 
 the log is just a wrapper over the Winston library, it formats the logs in [level] [timestamp] [requestId] [logs] it appends the requestId to every log statement.
 ##### Import the module 
-`const { log } = require("api-request-logger");`
+`const { logger } = require("api-request-logger");`
 
 Example 
 ```javascript 
-log.info("This is an info");
-log.warn("This is a warning");
-log.error("This is an error");
+logger.info("This is an info");
+logger.warn("This is a warning");
+logger.error("This is an error");
 ```
 
 ##### changing log level 

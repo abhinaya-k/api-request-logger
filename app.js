@@ -1,5 +1,4 @@
 const { performance } = require("perf_hooks");
-const chalk = require("chalk");
 const { logger } = require("./logger/log");
 
 const apiLogger = (req, res, next) => {

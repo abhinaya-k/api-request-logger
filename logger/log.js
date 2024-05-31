@@ -3,8 +3,7 @@ require("dotenv").config();
 const { combine, timestamp, json, errors, colorize } = winston.format
 
 const logger = winston.createLogger({
-  /** initialize requestId */
-  defaultMeta: { requestId: "" },
+
   level: process.env.LOG_LEVEL || 'info',
   format: combine(
     timestamp(),
@@ -13,7 +12,7 @@ const logger = winston.createLogger({
   ),
   transports: [new winston.transports.Console({
     format: combine(
-      colorize({all: true})
+      colorize({ all: true })
     )
   })],
 });

@@ -3,7 +3,10 @@ const { logger } = require("./logger/log");
 
 const apiLogger = (req, res, next) => {
   const startTime = performance.now();
-  processRequestId(req);
+  const requestId = processRequestId(req);
+  const correlationId = processCorrelationId(req)
+
+  const requestLogger = logger.child({ correlationId: correlationId })
 
   res.on("finish", () => {
     const endTime = performance.now();
@@ -11,14 +14,16 @@ const apiLogger = (req, res, next) => {
     const logData = {
       requestUrl: req.protocol + "://" + req.get("host") + req.originalUrl,
       requestMethod: req.method,
-      userAgent: req.headers["user-agent"],
-      xRequestId: req.headers["X-request-id"],
+      userAgent: req.header("user-agent"),
+      xRequestId: req.header("x-request-id"),
       apiLatency: latency,
       time: new Date().toISOString(),
       reqBody: req.body,
-      env: process.env.NODE_ENV
+      env: process.env.NODE_ENV,
+      statusCode: res.statusCode,
+      statusMessage: res.statusMessage
     };
-    logger.info("api_stats", logData)
+    requestLogger.info("api_stats", logData)
   });
 
   next();
@@ -26,16 +31,25 @@ const apiLogger = (req, res, next) => {
 module.exports.apiLogger = apiLogger;
 
 /**
- * @description generates `[X-request-id]` if not present in headers and appends it to the `req.headers` & log instance
+ * @description generates `[X-request-id]` if not present in headers and appends it to the `req.headers` 
  * @param {object} req - express req instance
  */
 const processRequestId = (req) => {
-  if (!req.headers["X-request-id"]) {
+  if (!req.header('x-request-id')) {
     const requestId = require("crypto").randomBytes(16).toString("hex");
-    req.headers['X-request-id'] = requestId;
-    logger.defaultMeta["requestId"] = requestId;
+    req.headers['x-request-id'] = requestId;
     return requestId;
-  } else if (req.headers["X-request-id"]) {
-    logger.defaultMeta["requestId"] = req.headers["X-request-id"];
+  } else {
+    return req.header('x-request-id')
+  }
+}
+
+const processCorrelationId = (req) => {
+  if (!req.header('x-correlation-id')) {
+    const correlationId = require("crypto").randomBytes(16).toString("hex");
+    req.headers['x-correlation-id'] = correlationId;
+    return correlationId;
+  } else {
+    return req.header('x-correlation-id')
   }
 }

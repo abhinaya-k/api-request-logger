@@ -1,5 +1,6 @@
 const { performance } = require("perf_hooks");
 const { logger } = require("./logger/log");
+const { v4: uuidv4 } = require("uuid");
 
 const apiLogger = (req, res, next) => {
   const startTime = performance.now();
@@ -36,7 +37,7 @@ module.exports.apiLogger = apiLogger;
  */
 const processRequestId = (req) => {
   if (!req.header('x-request-id')) {
-    const requestId = require("crypto").randomBytes(16).toString("hex");
+    const requestId = uuidv4();
     req.headers['x-request-id'] = requestId;
     return requestId;
   } else {
